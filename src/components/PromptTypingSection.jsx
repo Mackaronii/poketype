@@ -26,7 +26,7 @@ class PromptTypingSection extends Component {
 
   componentDidMount() {
     // Get prompts and then generate a new prompt
-    fetch("https://poketype-api.herokuapp.com/api/v1/facts", {
+    fetch("https://poketype-api.herokuapp.com/v1/facts", {
       method: "get"
     })
       .then(
