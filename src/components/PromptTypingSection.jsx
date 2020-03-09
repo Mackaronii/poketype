@@ -68,11 +68,26 @@ class PromptTypingSection extends Component {
     );
   };
 
+  // Reset the typing form for the same prompt
+  retryPrompt = () => {
+    this.setState({
+      hasStarted: false,
+      curWord: this.state.promptWords[0],
+      curWordIndex: 0,
+      wrongIndices: [],
+      correctIndices: [],
+      wpm: "XX",
+      acc: "XX",
+      isInputDisabled: false
+    });
+  };
+
   changeHandler = e => {
     // Set start time on first key press
     if (!this.state.hasStarted) {
       const startTime = Date.now();
       this.setState({ hasStarted: true, startTime: startTime });
+      console.log(`Timer started: ${startTime}`);
     }
 
     const curInput = e.target.value;
@@ -120,6 +135,7 @@ class PromptTypingSection extends Component {
   promptCompleted = () => {
     // Get duration
     const endTime = Date.now();
+    console.log(`Timer ended: ${endTime}`);
     const durationMs = endTime - this.state.startTime;
     const durationSec = durationMs / 1000;
 
@@ -178,6 +194,13 @@ class PromptTypingSection extends Component {
             style={{ marginTop: "50px" }}
           >
             Give me another Pok&#xe9;Fact!
+          </Button>
+          <Button
+            variant="outline-dark"
+            onClick={this.retryPrompt}
+            style={{ marginTop: "50px", marginLeft: "20px" }}
+          >
+            Retry
           </Button>
         </Container>
       </div>
