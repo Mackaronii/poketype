@@ -24,19 +24,71 @@ class PromptTypingSection extends Component {
     };
   }
 
+  // Get prompts and then generate a new prompt
   componentDidMount() {
-    // Get prompts and then generate a new prompt
-    fetch("https://poketype-api.herokuapp.com/v1/facts", {
-      method: "get"
+    this.getAllPokeFacts().then(facts =>
+      this.setState({ prompts: facts }, () => this.generateNewPrompt())
+    );
+  }
+
+  // Get all PokeFacts
+  getAllPokeFacts() {
+    const promise = fetch("https://poketype-api.herokuapp.com/v1/facts", {
+      method: "GET"
     })
       .then(
         res => res.json(),
         err => console.error(err)
       )
-      .then(data => {
-        const facts = data.facts;
-        this.setState({ prompts: facts }, () => this.generateNewPrompt());
+      .then(json => {
+        return json["facts"];
       });
+
+    return promise;
+  }
+
+  // Submit entry to the leaderboard of the given prompt
+  submitLeaderboardEntry(id, date, username, wpm, acc) {
+    const entry = {
+      pokeFactId: id,
+      date: date,
+      username: username,
+      wpm: wpm,
+      acc: acc
+    };
+
+    const promise = fetch(
+      `https://poketype-api.herokuapp.com/v1/leaderboards`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Connection: "keep-alive"
+        },
+        body: JSON.stringify(entry)
+      }
+    );
+
+    return promise;
+  }
+
+  // Get the leaderboard for the given prompt
+  getLeaderboard(_id) {
+    const promise = fetch(
+      `https://poketype-api.herokuapp.com/v1/leaderboards?_id=${_id}`,
+      {
+        method: "GET"
+      }
+    )
+      .then(
+        res => res.json(),
+        err => console.error(err)
+      )
+      .then(json => {
+        return json["leaderboard"];
+      });
+
+    return promise;
   }
 
   generateNewPrompt = () => {
@@ -147,9 +199,18 @@ class PromptTypingSection extends Component {
     // Get accuracy
     const numCorrect = this.state.correctIndices.length;
     const numTotal = this.state.promptWords.length;
-    const accuracy = ((numCorrect / numTotal) * 100).toFixed(2) + "%";
+    const acc = parseFloat(((numCorrect / numTotal) * 100).toFixed(2));
 
-    this.setState({ isInputDisabled: true, wpm: wpm, acc: accuracy });
+    this.setState({ isInputDisabled: true, wpm: wpm, acc: acc }, () => {
+      // Post leaderboard entry
+      this.submitLeaderboardEntry(
+        this.state.prompt["_id"],
+        new Date(),
+        "test_user",
+        wpm,
+        acc
+      ).then(res => console.log(res));
+    });
   };
 
   // Returns true if the last character of input is a [space]

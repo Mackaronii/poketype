@@ -18,7 +18,7 @@ class SectionHeader extends Component {
     return (
       <div>
         <p>
-          WPM: {this.state.wpm} | ACC: {this.state.acc}
+          WPM: {this.state.wpm} | ACC: {this.state.acc}%
         </p>
       </div>
     );
