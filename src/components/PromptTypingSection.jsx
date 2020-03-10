@@ -67,15 +67,15 @@ class PromptTypingSection extends Component {
         },
         body: JSON.stringify(entry)
       }
-    );
+    ).then(res => console.log(res));
 
     return promise;
   }
 
-  // Get the leaderboard for the given prompt
-  getLeaderboard(_id) {
+  // Get all leaderboard entries
+  getAllLeaderboardEntries() {
     const promise = fetch(
-      `https://poketype-api.herokuapp.com/v1/leaderboards?_id=${_id}`,
+      `https://poketype-api.herokuapp.com/v1/leaderboards`,
       {
         method: "GET"
       }
@@ -85,7 +85,8 @@ class PromptTypingSection extends Component {
         err => console.error(err)
       )
       .then(json => {
-        return json["leaderboard"];
+        console.log(json["leaderboardEntries"]);
+        return json["leaderboardEntries"];
       });
 
     return promise;
@@ -209,7 +210,7 @@ class PromptTypingSection extends Component {
         "test_user",
         wpm,
         acc
-      ).then(res => console.log(res));
+      ).then(() => this.getAllLeaderboardEntries());
     });
   };
 
