@@ -4,6 +4,7 @@ import SectionHeader from "./SectionHeader";
 import Prompt from "./Prompt";
 import TypingForm from "./TypingForm";
 import Button from "react-bootstrap/Button";
+import Leaderboard from "./Leaderboard";
 
 class PromptTypingSection extends Component {
   constructor(props) {
@@ -20,7 +21,8 @@ class PromptTypingSection extends Component {
       correctIndices: [],
       wpm: "XX",
       acc: "XX",
-      isInputDisabled: false
+      isInputDisabled: false,
+      isLeaderboardVisible: false
     };
   }
 
@@ -33,7 +35,7 @@ class PromptTypingSection extends Component {
 
   // Get all PokeFacts
   getAllPokeFacts() {
-    const promise = fetch("https://poketype-api.herokuapp.com/v1/facts", {
+    const promise = fetch("https://poketype-api.herokuapp.com/v1/pokefacts", {
       method: "GET"
     })
       .then(
@@ -41,7 +43,7 @@ class PromptTypingSection extends Component {
         err => console.error(err)
       )
       .then(json => {
-        return json["facts"];
+        return json["pokefacts"];
       });
 
     return promise;
@@ -58,7 +60,7 @@ class PromptTypingSection extends Component {
     };
 
     const promise = fetch(
-      `https://poketype-api.herokuapp.com/v1/leaderboards`,
+      `https://poketype-api.herokuapp.com/v1/pokefact_leaderboards`,
       {
         method: "POST",
         headers: {
@@ -72,10 +74,10 @@ class PromptTypingSection extends Component {
     return promise;
   }
 
-  // Get all leaderboard entries
-  getAllLeaderboardEntries() {
+  // Get all PokeFact leaderboard entries
+  getAllPokeFactLeaderboards() {
     const promise = fetch(
-      `https://poketype-api.herokuapp.com/v1/leaderboards`,
+      `https://poketype-api.herokuapp.com/v1/pokefact_leaderboards`,
       {
         method: "GET"
       }
@@ -85,8 +87,30 @@ class PromptTypingSection extends Component {
         err => console.error(err)
       )
       .then(json => {
-        console.log(json["leaderboardEntries"]);
-        return json["leaderboardEntries"];
+        const leaderboard = json["pokefact_leaderboard"];
+        console.log(leaderboard);
+        return leaderboard;
+      });
+
+    return promise;
+  }
+
+  // Get PokeFact leaderboard by ID
+  getPokeFactLeaderboardById(id) {
+    const promise = fetch(
+      `https://poketype-api.herokuapp.com/v1/pokefact_leaderboards?id=${id}`,
+      {
+        method: "GET"
+      }
+    )
+      .then(
+        res => res.json(),
+        err => console.error(err)
+      )
+      .then(json => {
+        const leaderboard = json["pokefact_leaderboard"];
+        console.log(leaderboard);
+        return leaderboard;
       });
 
     return promise;
@@ -113,7 +137,8 @@ class PromptTypingSection extends Component {
         correctIndices: [],
         wpm: "XX",
         acc: "XX",
-        isInputDisabled: false
+        isInputDisabled: false,
+        isLeaderboardVisible: false
       },
       () => {
         this.setState({ curWord: this.state.promptWords[0] });
@@ -203,14 +228,22 @@ class PromptTypingSection extends Component {
     const acc = parseFloat(((numCorrect / numTotal) * 100).toFixed(2));
 
     this.setState({ isInputDisabled: true, wpm: wpm, acc: acc }, () => {
-      // Post leaderboard entry
+      // First, post PokeFact leaderboard entry
       this.submitLeaderboardEntry(
         this.state.prompt["_id"],
         new Date(),
         "test_user",
         wpm,
         acc
-      ).then(() => this.getAllLeaderboardEntries());
+      )
+        // Then get the PokeFact leaderboard for the current prompt
+        .then(() => this.getPokeFactLeaderboardById(this.state.prompt["_id"]))
+        .then(pokefact_leaderboard =>
+          this.setState({
+            pokefact_leaderboard: pokefact_leaderboard,
+            isLeaderboardVisible: true
+          })
+        );
     });
   };
 
@@ -264,6 +297,13 @@ class PromptTypingSection extends Component {
           >
             Retry
           </Button>
+          {this.state.isLeaderboardVisible ? (
+            <Leaderboard leaderboard={this.state.pokefact_leaderboard} />
+          ) : (
+            <p style={{ marginTop: "50px", textAlign: "center" }}>
+              Complete the PokeFact above to view its leaderboards!
+            </p>
+          )}
         </Container>
       </div>
     );
