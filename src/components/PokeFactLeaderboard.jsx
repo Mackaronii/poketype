@@ -1,22 +1,7 @@
 import React from "react";
 import Table from "react-bootstrap/Table";
 
-const MONTH_NAMES = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December"
-];
-
-function Leaderboard(props) {
+function PokeFactLeaderboard(props) {
   const leaderboard = props.leaderboard;
 
   // Convert returned date strings into Date objects
@@ -50,4 +35,4 @@ function Leaderboard(props) {
   );
 }
 
-export default Leaderboard;
+export default PokeFactLeaderboard;

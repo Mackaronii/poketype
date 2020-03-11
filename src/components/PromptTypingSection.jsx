@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import Container from "react-bootstrap/Container";
 import SectionHeader from "./SectionHeader";
 import Prompt from "./Prompt";
-import TypingForm from "./TypingForm";
+import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import Leaderboard from "./Leaderboard";
+import PokeFactLeaderboard from "./PokeFactLeaderboard";
 
 class PromptTypingSection extends Component {
   constructor(props) {
@@ -281,10 +281,17 @@ class PromptTypingSection extends Component {
             correctIndices={this.state.correctIndices}
             wrongIndices={this.state.wrongIndices}
           />
-          <TypingForm
-            changeHandler={this.changeHandler}
-            isDisabled={this.state.isInputDisabled}
-          />
+          <Form
+            onSubmit={e => {
+              e.preventDefault();
+            }}
+          >
+            <Form.Control
+              type="text"
+              onChange={this.changeHandler}
+              disabled={this.state.isInputDisabled}
+            />
+          </Form>
           <div style={{ marginTop: "30px" }}>
             <Button variant="primary" onClick={this.generateNewPrompt}>
               Give me another Pok&#xe9;Fact!
@@ -301,7 +308,9 @@ class PromptTypingSection extends Component {
         {this.state.isLeaderboardVisible ? (
           <div>
             <h5>Pok&#xe9;Fact Leaderboard (ID: {this.state.prompt["_id"]})</h5>
-            <Leaderboard leaderboard={this.state.pokefact_leaderboard} />
+            <PokeFactLeaderboard
+              leaderboard={this.state.pokefact_leaderboard}
+            />
           </div>
         ) : (
           <p style={{ textAlign: "center" }}>
