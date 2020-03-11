@@ -22,7 +22,7 @@ class Prompt extends Component {
 
   render() {
     return (
-      <div style={{ marginBottom: "20px" }}>
+      <div style={{ marginBottom: "30px", textAlign: "left" }}>
         {this.state.promptWords.map((word, i) => (
           <p
             key={i}

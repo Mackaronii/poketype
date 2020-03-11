@@ -238,6 +238,7 @@ class PromptTypingSection extends Component {
       )
         // Then get the PokeFact leaderboard for the current prompt
         .then(() => this.getPokeFactLeaderboardById(this.state.prompt["_id"]))
+        // Finally, show the leaderboard
         .then(pokefact_leaderboard =>
           this.setState({
             pokefact_leaderboard: pokefact_leaderboard,
@@ -270,7 +271,8 @@ class PromptTypingSection extends Component {
             backgroundColor: "#ECECEC",
             borderRadius: "10px",
             padding: "30px",
-            textAlign: "left"
+            marginBottom: "30px",
+            textAlign: "center"
           }}
         >
           <Prompt
@@ -283,28 +285,29 @@ class PromptTypingSection extends Component {
             changeHandler={this.changeHandler}
             isDisabled={this.state.isInputDisabled}
           />
-          <Button
-            variant="primary"
-            onClick={this.generateNewPrompt}
-            style={{ marginTop: "50px" }}
-          >
-            Give me another Pok&#xe9;Fact!
-          </Button>
-          <Button
-            variant="outline-dark"
-            onClick={this.retryPrompt}
-            style={{ marginTop: "50px", marginLeft: "20px" }}
-          >
-            Retry
-          </Button>
-          {this.state.isLeaderboardVisible ? (
-            <Leaderboard leaderboard={this.state.pokefact_leaderboard} />
-          ) : (
-            <p style={{ marginTop: "50px", textAlign: "center" }}>
-              Complete the PokeFact above to view its leaderboards!
-            </p>
-          )}
+          <div style={{ marginTop: "30px" }}>
+            <Button variant="primary" onClick={this.generateNewPrompt}>
+              Give me another Pok&#xe9;Fact!
+            </Button>
+            <Button
+              variant="outline-dark"
+              onClick={this.retryPrompt}
+              style={{ marginLeft: "20px" }}
+            >
+              Retry
+            </Button>
+          </div>
         </Container>
+        {this.state.isLeaderboardVisible ? (
+          <div>
+            <h5>Pok&#xe9;Fact Leaderboard (ID: {this.state.prompt["_id"]})</h5>
+            <Leaderboard leaderboard={this.state.pokefact_leaderboard} />
+          </div>
+        ) : (
+          <p style={{ textAlign: "center" }}>
+            Complete the Pok&#xe9;Fact above to view its leaderboards!
+          </p>
+        )}
       </div>
     );
   }
