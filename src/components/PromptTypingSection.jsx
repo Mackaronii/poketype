@@ -11,6 +11,7 @@ class PromptTypingSection extends Component {
     super(props);
 
     this.state = {
+      category: props.category,
       hasStarted: false,
       prompts: [],
       prompt: {},
@@ -28,9 +29,15 @@ class PromptTypingSection extends Component {
 
   // Get prompts and then generate a new prompt
   componentDidMount() {
-    this.getAllPrompts().then(prompts =>
-      this.setState({ prompts: prompts }, () => this.generateNewPrompt())
-    );
+    if (this.state.category === "") {
+      this.getAllPrompts().then(prompts =>
+        this.setState({ prompts: prompts }, () => this.generateNewPrompt())
+      );
+    } else {
+      this.getPromptsByCategory().then(prompts =>
+        this.setState({ prompts: prompts }, () => this.generateNewPrompt())
+      );
+    }
   }
 
   // Get all prompts
@@ -38,6 +45,24 @@ class PromptTypingSection extends Component {
     const promise = fetch("https://poketype-api.herokuapp.com/v1/prompts", {
       method: "GET"
     })
+      .then(
+        res => res.json(),
+        err => console.error(err)
+      )
+      .then(json => {
+        return json["prompts"];
+      });
+
+    return promise;
+  }
+
+  getPromptsByCategory() {
+    const promise = fetch(
+      `https://poketype-api.herokuapp.com/v1/prompts?category=${this.state.category}`,
+      {
+        method: "GET"
+      }
+    )
       .then(
         res => res.json(),
         err => console.error(err)
