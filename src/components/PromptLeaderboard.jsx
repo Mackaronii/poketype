@@ -10,28 +10,31 @@ function PromptLeaderboard(props) {
   });
 
   return (
-    <Table striped bordered hover>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Username</th>
-          <th>WPM</th>
-          <th>ACC (%)</th>
-          <th>Attempted On</th>
-        </tr>
-      </thead>
-      <tbody>
-        {leaderboard.map((entry, i) => (
-          <tr key={i}>
-            <td>{i + 1}</td>
-            <td>{entry["username"]}</td>
-            <td>{entry["wpm"]}</td>
-            <td>{entry["acc"]}</td>
-            <td>{entry["date"].toLocaleString()}</td>
+    <div>
+      <p>Leaderboard (Prompt ID: {props.promptId})</p>
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Username</th>
+            <th>WPM</th>
+            <th>ACC (%)</th>
+            <th>Attempted On</th>
           </tr>
-        ))}
-      </tbody>
-    </Table>
+        </thead>
+        <tbody>
+          {leaderboard.map((entry, i) => (
+            <tr key={i}>
+              <td>{i + 1}</td>
+              <td>{entry["username"]}</td>
+              <td>{entry["wpm"]}</td>
+              <td>{entry["acc"]}</td>
+              <td>{entry["date"].toLocaleString()}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </div>
   );
 }
 

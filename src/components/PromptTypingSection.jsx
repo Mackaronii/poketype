@@ -284,10 +284,10 @@ class PromptTypingSection extends Component {
           </div>
         </Container>
         {this.state.isLeaderboardVisible ? (
-          <div>
-            <h5>Pok&#xe9;Fact Leaderboard (ID: {this.state.prompt["_id"]})</h5>
-            <PromptLeaderboard leaderboard={this.state.prompt_leaderboard} />
-          </div>
+          <PromptLeaderboard
+            promptId={this.state.prompt["_id"]}
+            leaderboard={this.state.prompt_leaderboard}
+          />
         ) : (
           <p style={{ textAlign: "center" }}>
             Complete the Pok&#xe9;Fact above to view its leaderboards!
