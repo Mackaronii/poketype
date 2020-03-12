@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import Container from "react-bootstrap/Container";
 import SectionHeader from "./SectionHeader";
 import Prompt from "./Prompt";
+import PromptLeaderboard from "./PromptLeaderboard";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import PokeFactLeaderboard from "./PokeFactLeaderboard";
 
 class PromptTypingSection extends Component {
   constructor(props) {
@@ -28,14 +28,14 @@ class PromptTypingSection extends Component {
 
   // Get prompts and then generate a new prompt
   componentDidMount() {
-    this.getAllPokeFacts().then(facts =>
-      this.setState({ prompts: facts }, () => this.generateNewPrompt())
+    this.getAllPrompts().then(prompts =>
+      this.setState({ prompts: prompts }, () => this.generateNewPrompt())
     );
   }
 
-  // Get all PokeFacts
-  getAllPokeFacts() {
-    const promise = fetch("https://poketype-api.herokuapp.com/v1/pokefacts", {
+  // Get all prompts
+  getAllPrompts() {
+    const promise = fetch("https://poketype-api.herokuapp.com/v1/prompts", {
       method: "GET"
     })
       .then(
@@ -43,26 +43,25 @@ class PromptTypingSection extends Component {
         err => console.error(err)
       )
       .then(json => {
-        return json["pokefacts"];
+        return json["prompts"];
       });
 
     return promise;
   }
 
   // Submit entry to the leaderboard of the given prompt
-  submitLeaderboardEntry(id, date, username, wpm, acc) {
+  submitPromptLeaderboardEntry(promptId, username, wpm, acc, date) {
     const entry = {
-      pokeFactId: id,
-      date: date,
       username: username,
       wpm: wpm,
-      acc: acc
+      acc: acc,
+      date: date
     };
 
     const promise = fetch(
-      `https://poketype-api.herokuapp.com/v1/pokefact_leaderboards`,
+      `https://poketype-api.herokuapp.com/v1/prompt_leaderboards/${promptId}`,
       {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Connection: "keep-alive"
@@ -74,10 +73,10 @@ class PromptTypingSection extends Component {
     return promise;
   }
 
-  // Get all PokeFact leaderboard entries
-  getAllPokeFactLeaderboards() {
+  // Get prompt leaderboard by ID
+  getPromptLeaderboardById(promptId) {
     const promise = fetch(
-      `https://poketype-api.herokuapp.com/v1/pokefact_leaderboards`,
+      `https://poketype-api.herokuapp.com/v1/prompt_leaderboards?promptId=${promptId}`,
       {
         method: "GET"
       }
@@ -87,28 +86,7 @@ class PromptTypingSection extends Component {
         err => console.error(err)
       )
       .then(json => {
-        const leaderboard = json["pokefact_leaderboard"];
-        console.log(leaderboard);
-        return leaderboard;
-      });
-
-    return promise;
-  }
-
-  // Get PokeFact leaderboard by ID
-  getPokeFactLeaderboardById(id) {
-    const promise = fetch(
-      `https://poketype-api.herokuapp.com/v1/pokefact_leaderboards?id=${id}`,
-      {
-        method: "GET"
-      }
-    )
-      .then(
-        res => res.json(),
-        err => console.error(err)
-      )
-      .then(json => {
-        const leaderboard = json["pokefact_leaderboard"];
+        const leaderboard = json["prompt_leaderboard"];
         console.log(leaderboard);
         return leaderboard;
       });
@@ -117,21 +95,21 @@ class PromptTypingSection extends Component {
   }
 
   generateNewPrompt = () => {
-    const { prompts, prompt } = this.state;
-
     // Generate a new prompt (cannot be the same as current prompt)
-    let newPromptIndex = Math.floor(Math.random() * prompts.length);
-    while (prompt["_id"] === prompts[newPromptIndex]["_id"]) {
-      newPromptIndex = Math.floor(Math.random() * prompts.length);
+    let newPromptIndex = Math.floor(Math.random() * this.state.prompts.length);
+    while (
+      this.state.prompt["_id"] === this.state.prompts[newPromptIndex]["_id"]
+    ) {
+      newPromptIndex = Math.floor(Math.random() * this.state.prompts.length);
     }
-    const newPrompt = prompts[newPromptIndex];
+    const newPrompt = this.state.prompts[newPromptIndex];
 
     // Set state for new prompt and enable input
     this.setState(
       {
         hasStarted: false,
         prompt: newPrompt,
-        promptWords: newPrompt.fact.split(" "),
+        promptWords: newPrompt["prompt"].split(" "),
         curWordIndex: 0,
         wrongIndices: [],
         correctIndices: [],
@@ -228,20 +206,20 @@ class PromptTypingSection extends Component {
     const acc = parseFloat(((numCorrect / numTotal) * 100).toFixed(2));
 
     this.setState({ isInputDisabled: true, wpm: wpm, acc: acc }, () => {
-      // First, post PokeFact leaderboard entry
-      this.submitLeaderboardEntry(
+      // First, post prompt leaderboard entry
+      this.submitPromptLeaderboardEntry(
         this.state.prompt["_id"],
-        new Date(),
         "test_user",
         wpm,
-        acc
+        acc,
+        new Date()
       )
-        // Then get the PokeFact leaderboard for the current prompt
-        .then(() => this.getPokeFactLeaderboardById(this.state.prompt["_id"]))
+        // Then get the prompt leaderboard for the current prompt
+        .then(() => this.getPromptLeaderboardById(this.state.prompt["_id"]))
         // Finally, show the leaderboard
-        .then(pokefact_leaderboard =>
+        .then(prompt_leaderboard =>
           this.setState({
-            pokefact_leaderboard: pokefact_leaderboard,
+            prompt_leaderboard: prompt_leaderboard,
             isLeaderboardVisible: true
           })
         );
@@ -308,9 +286,7 @@ class PromptTypingSection extends Component {
         {this.state.isLeaderboardVisible ? (
           <div>
             <h5>Pok&#xe9;Fact Leaderboard (ID: {this.state.prompt["_id"]})</h5>
-            <PokeFactLeaderboard
-              leaderboard={this.state.pokefact_leaderboard}
-            />
+            <PromptLeaderboard leaderboard={this.state.prompt_leaderboard} />
           </div>
         ) : (
           <p style={{ textAlign: "center" }}>

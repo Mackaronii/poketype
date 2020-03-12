@@ -1,7 +1,7 @@
 import React from "react";
 import Table from "react-bootstrap/Table";
 
-function PokeFactLeaderboard(props) {
+function PromptLeaderboard(props) {
   const leaderboard = props.leaderboard;
 
   // Convert returned date strings into Date objects
@@ -35,4 +35,4 @@ function PokeFactLeaderboard(props) {
   );
 }
 
-export default PokeFactLeaderboard;
+export default PromptLeaderboard;
