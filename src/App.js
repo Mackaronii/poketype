@@ -3,25 +3,23 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Splash from "./components/Splash";
 import Container from "react-bootstrap/Container";
 import PromptTypingSection from "./components/PromptTypingSection";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { HashRouter, Switch, Route, Link } from "react-router-dom";
 
 class App extends React.Component {
   render() {
     return (
-      <Router>
+      <HashRouter basename="/">
         <div>
           {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
           <Switch>
+            <Route exact path="/" component={Splash} />
             <Route path="/facts">
               <Main category="fact" />
             </Route>
-            <Route path="/">
-              <Splash />
-            </Route>
           </Switch>
         </div>
-      </Router>
+      </HashRouter>
     );
   }
 }
