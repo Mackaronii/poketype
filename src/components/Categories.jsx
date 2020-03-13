@@ -1,24 +1,40 @@
 import React from "react";
 import Container from "react-bootstrap/Container";
-import Button from "react-bootstrap/Button";
+import CategoryItem from "./CategoryItem";
 import { Link } from "react-router-dom";
 
 function Categories() {
   const categories = [
-    { label: "PokéFacts", dest: "facts" },
-    { label: "PokéLore", dest: "lores" }
+    {
+      title: "[ EASY ] PokéFacts",
+      description: "Learn niche, and highly unnecessary, facts about Pokémon!",
+      dest: "facts",
+      image:
+        "https://vignette.wikia.nocookie.net/youtubepoop/images/4/4c/Pokeball.png/revision/latest?cb=20150418234807"
+    },
+    {
+      title: "[ MEDIUM ] PokéLore",
+      description:
+        "Uncover the details of various character backgrounds from all walks of life in the Pokémon universe.",
+      dest: "lores",
+      image:
+        "https://lh3.googleusercontent.com/proxy/OqsgBGbg5AG5GbQFaTQhlj-TTkIE7GQQueQJwKYMnhkxhRWenViFiWpD7NRiUWS3ZYszms7MhLo1H1DaCMSUhigEmAzL8y9w1w"
+    }
   ];
 
   return (
     <Container style={{ padding: "20px" }}>
-      <p style={{ textAlign: "center" }}>Choose a category</p>
+      <h4 style={{ textAlign: "center", marginBottom: "50px" }}>
+        Choose a category
+      </h4>
       {categories.map((category, i) => (
-        <div key={i}>
-          <Link to={`/${category["dest"]}`}>
-            <Button style={{ marginBottom: "20px" }}>
-              {category["label"]}
-            </Button>
-          </Link>
+        <div key={i} style={{ marginBottom: "20px" }}>
+          <CategoryItem
+            title={category.title}
+            description={category.description}
+            image={category.image}
+            dest={category.dest}
+          />
         </div>
       ))}
     </Container>

@@ -19,19 +19,23 @@ function Splash() {
 
   const imageStyle = {
     display: "block",
-    maxWidth: "400px",
+    maxWidth: "300px",
     margin: "auto",
     marginBottom: "50px"
   };
 
+  const splashImages = [
+    "https://lh3.googleusercontent.com/proxy/OqsgBGbg5AG5GbQFaTQhlj-TTkIE7GQQueQJwKYMnhkxhRWenViFiWpD7NRiUWS3ZYszms7MhLo1H1DaCMSUhigEmAzL8y9w1w",
+    "https://pngimg.com/uploads/pokemon/pokemon_PNG154.png",
+    "https://lh3.googleusercontent.com/proxy/eWgQX4VhR5DzHc2t02u6awzYn940GpNhVI80JXjQ7VIHBfsTjsDVDplnzHLEbFhHEl2D4zfVQQWV-CQOP_Do-__HsC4VfgQS2OJiSqYA3bWhFr8x5Lg8zw7tOfmbtqIISg"
+  ];
+
+  const randIndex = Math.floor(Math.random() * splashImages.length);
+
   return (
     <Container style={containerTableStyle}>
       <Row style={verticalCenterRowStyle}>
-        <Image
-          fluid
-          src="https://lh3.googleusercontent.com/proxy/OqsgBGbg5AG5GbQFaTQhlj-TTkIE7GQQueQJwKYMnhkxhRWenViFiWpD7NRiUWS3ZYszms7MhLo1H1DaCMSUhigEmAzL8y9w1w"
-          style={imageStyle}
-        />
+        <Image fluid src={splashImages[randIndex]} style={imageStyle} />
         <h1>Welcome to Pok&#xe9;Type!</h1>
         <p>
           Challenge other trainers across the globe to be the best typist there
@@ -39,7 +43,7 @@ function Splash() {
         </p>
         <Link to="/categories">
           <Button variant="outline-primary" style={{ marginTop: "30px" }}>
-            Get Started!
+            Get Started
           </Button>
         </Link>
       </Row>
