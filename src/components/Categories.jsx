@@ -28,12 +28,19 @@ function Categories() {
       </h4>
       {categories.map((category, i) => (
         <div key={i} style={{ marginBottom: "20px" }}>
-          <CategoryItem
-            title={category.title}
-            description={category.description}
-            image={category.image}
-            dest={category.dest}
-          />
+          <Link
+            to={`/${category.dest}`}
+            style={{
+              textDecoration: "none",
+              color: "#000"
+            }}
+          >
+            <CategoryItem
+              title={category.title}
+              description={category.description}
+              image={category.image}
+            />
+          </Link>
         </div>
       ))}
     </Container>

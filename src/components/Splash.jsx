@@ -25,8 +25,6 @@ function Splash() {
   };
 
   const splashImages = [
-    "https://lh3.googleusercontent.com/proxy/OqsgBGbg5AG5GbQFaTQhlj-TTkIE7GQQueQJwKYMnhkxhRWenViFiWpD7NRiUWS3ZYszms7MhLo1H1DaCMSUhigEmAzL8y9w1w",
-    "https://pngimg.com/uploads/pokemon/pokemon_PNG154.png",
     "https://lh3.googleusercontent.com/proxy/eWgQX4VhR5DzHc2t02u6awzYn940GpNhVI80JXjQ7VIHBfsTjsDVDplnzHLEbFhHEl2D4zfVQQWV-CQOP_Do-__HsC4VfgQS2OJiSqYA3bWhFr8x5Lg8zw7tOfmbtqIISg"
   ];
 

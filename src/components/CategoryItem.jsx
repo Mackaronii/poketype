@@ -10,9 +10,6 @@ function CategoryItem(props) {
       <Card.Body>
         <Card.Title>{props.title}</Card.Title>
         <Card.Text>{props.description}</Card.Text>
-        <Link to={`/${props.dest}`}>
-          <Button variant="outline-primary">View</Button>
-        </Link>
       </Card.Body>
     </Card>
   );
