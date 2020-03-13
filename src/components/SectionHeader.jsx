@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import Button from "react-bootstrap/Button";
 
 class SectionHeader extends Component {
   constructor(props) {
@@ -17,6 +19,9 @@ class SectionHeader extends Component {
   render() {
     return (
       <div>
+        <Link to="/categories">
+          <Button variant="link">Back to Categories</Button>
+        </Link>
         <p>
           WPM: {this.state.wpm} | ACC: {this.state.acc}%
         </p>

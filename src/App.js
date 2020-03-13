@@ -17,6 +17,9 @@ class App extends React.Component {
             <Route path="/facts">
               <Main category="fact" />
             </Route>
+            <Route path="/behaviours">
+              <Main category="behaviour" />
+            </Route>
           </Switch>
         </div>
       </HashRouter>

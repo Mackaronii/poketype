@@ -296,14 +296,14 @@ class PromptTypingSection extends Component {
             />
           </Form>
           <div style={{ marginTop: "30px" }}>
-            <Button variant="primary" onClick={this.generateNewPrompt}>
-              Give me another Pok&#xe9;Fact!
-            </Button>
             <Button
-              variant="outline-dark"
-              onClick={this.retryPrompt}
-              style={{ marginLeft: "20px" }}
+              variant="primary"
+              onClick={this.generateNewPrompt}
+              style={{ marginRight: "20px" }}
             >
+              Give me another Pok&#xe9;Prompt!
+            </Button>
+            <Button variant="outline-dark" onClick={this.retryPrompt}>
               Retry
             </Button>
           </div>
@@ -315,7 +315,7 @@ class PromptTypingSection extends Component {
           />
         ) : (
           <p style={{ textAlign: "center" }}>
-            Complete the Pok&#xe9;Fact above to view its leaderboards!
+            Complete the Pok&#xe9;Prompt above to view its leaderboards!
           </p>
         )}
       </div>

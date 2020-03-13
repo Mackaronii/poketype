@@ -13,10 +13,9 @@ function Categories() {
         "https://vignette.wikia.nocookie.net/youtubepoop/images/4/4c/Pokeball.png/revision/latest?cb=20150418234807"
     },
     {
-      title: "[ MEDIUM ] PokéLore",
-      description:
-        "Uncover the details of various character backgrounds from all walks of life in the Pokémon universe.",
-      dest: "lores",
+      title: "[ MEDIUM ] PokéBehaviours",
+      description: "Discover how Pokémon behave.",
+      dest: "behaviours",
       image:
         "https://lh3.googleusercontent.com/proxy/OqsgBGbg5AG5GbQFaTQhlj-TTkIE7GQQueQJwKYMnhkxhRWenViFiWpD7NRiUWS3ZYszms7MhLo1H1DaCMSUhigEmAzL8y9w1w"
     }
