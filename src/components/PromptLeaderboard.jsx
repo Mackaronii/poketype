@@ -9,6 +9,19 @@ function PromptLeaderboard(props) {
     entry["date"] = new Date(entry["date"]);
   });
 
+  // Sort leaderboard by WPM
+  leaderboard
+    .sort((a, b) => {
+      if (a.wpm < b.wpm) {
+        return -1;
+      }
+      if (a.wpm > b.wpm) {
+        return 1;
+      }
+      return 0;
+    })
+    .reverse();
+
   return (
     <div>
       <p>Leaderboard (Prompt ID: {props.promptId})</p>

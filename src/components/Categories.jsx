@@ -55,13 +55,7 @@ class Categories extends Component {
         </h4>
         {this.state.categories.map((category, i) => (
           <div key={i} style={{ marginBottom: "20px" }}>
-            <Link
-              to={`/${category.dest}`}
-              style={{
-                textDecoration: "none",
-                color: "#000"
-              }}
-            >
+            <Link to={`/${category.dest}`}>
               <CategoryItem
                 title={category.title}
                 description={category.description}
