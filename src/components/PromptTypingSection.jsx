@@ -5,6 +5,7 @@ import Prompt from "./Prompt";
 import PromptLeaderboard from "./PromptLeaderboard";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import Loading from "./Loading";
 
 class PromptTypingSection extends Component {
   constructor(props) {
@@ -12,6 +13,7 @@ class PromptTypingSection extends Component {
 
     this.state = {
       category: props.category,
+      hasLoaded: false,
       hasStarted: false,
       prompts: [],
       prompt: {},
@@ -31,11 +33,15 @@ class PromptTypingSection extends Component {
   componentDidMount() {
     if (this.state.category === "") {
       this.getAllPrompts().then(prompts =>
-        this.setState({ prompts: prompts }, () => this.generateNewPrompt())
+        this.setState({ prompts: prompts, hasLoaded: true }, () =>
+          this.generateNewPrompt()
+        )
       );
     } else {
       this.getPromptsByCategory().then(prompts =>
-        this.setState({ prompts: prompts }, () => this.generateNewPrompt())
+        this.setState({ prompts: prompts, hasLoaded: true }, () =>
+          this.generateNewPrompt()
+        )
       );
     }
   }
@@ -265,8 +271,9 @@ class PromptTypingSection extends Component {
     );
   };
 
+  // Display Loading component until prompts have been fetched
   render() {
-    return (
+    return this.state.hasLoaded ? (
       <div>
         <SectionHeader wpm={this.state.wpm} acc={this.state.acc} />
         <Container
@@ -319,6 +326,8 @@ class PromptTypingSection extends Component {
           </p>
         )}
       </div>
+    ) : (
+      <Loading />
     );
   }
 }
