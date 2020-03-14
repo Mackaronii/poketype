@@ -12,13 +12,7 @@ function PromptLeaderboard(props) {
   // Sort leaderboard by WPM
   leaderboard
     .sort((a, b) => {
-      if (a.wpm < b.wpm) {
-        return -1;
-      }
-      if (a.wpm > b.wpm) {
-        return 1;
-      }
-      return 0;
+      return a.wpm - b.wpm || a.acc - b.acc;
     })
     .reverse();
 
