@@ -1,6 +1,6 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Splash from "./components/Splash";
+import Login from "./components/Login";
 import Categories from "./components/Categories";
 import Container from "react-bootstrap/Container";
 import PromptTypingSection from "./components/PromptTypingSection";
@@ -12,7 +12,7 @@ class App extends React.Component {
       <HashRouter basename="/">
         <div>
           <Switch>
-            <Route exact path="/" component={Splash} />
+            <Route exact path="/" component={Login} />
             <Route path="/categories" component={Categories} />
             <Route path="/facts">
               <Main category="fact" />

@@ -5,7 +5,7 @@ import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 
-function Splash() {
+function Login() {
   const containerTableStyle = {
     display: "table",
     height: "100vh"
@@ -45,4 +45,4 @@ function Splash() {
   );
 }
 
-export default Splash;
+export default Login;
