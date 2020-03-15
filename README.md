@@ -12,6 +12,9 @@ Hosted on GitHub Pages at https://mackaronii.github.io/poketype
     - Pok&#xe9;Behaviours
     - More to come!
 
+* Leaderboards for every prompt
+    - Ranked by WPM and accuracy
+
 ## Currently Working On
 
 * User accounts and login feature
