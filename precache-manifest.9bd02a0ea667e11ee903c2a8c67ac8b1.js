@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "f49d672c653a64e37e053045a6456905",
+    "revision": "7e8d6d76e4211e95c4acc150d3448d5a",
     "url": "/poketype/index.html"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/poketype/static/js/2.6212a991.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "6a142132e0d3ea88da71",
-    "url": "/poketype/static/js/main.3ed5f715.chunk.js"
+    "revision": "df5908115ebf7ded83ee",
+    "url": "/poketype/static/js/main.a22b9d1a.chunk.js"
   },
   {
     "revision": "56b51c1379a8d1e9da7b",
