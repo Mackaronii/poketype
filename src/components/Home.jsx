@@ -3,8 +3,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
+import SignUpModal from "./SignUpModal";
 import { Link } from "react-router-dom";
 
 class Home extends Component {
@@ -12,16 +11,11 @@ class Home extends Component {
     super(props);
 
     this.state = {
-      showSignUp: false,
-      validated: false,
-      formUsername: "",
-      formPassword: ""
+      showSignUp: false
     };
 
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleShow() {
@@ -29,58 +23,7 @@ class Home extends Component {
   }
 
   handleClose() {
-    this.setState({ showSignUp: false, validated: false });
-  }
-
-  handleChange(e) {
-    this.setState({ [e.target.id]: e.target.value });
-  }
-
-  handleSubmit(e) {
-    e.preventDefault();
-
-    // Update modal UI to reflect validation
-    this.setState({ validated: true });
-
-    // Check if fields in form are valid
-    if (!e.target.checkValidity()) {
-      e.stopPropagation();
-    } else {
-      // Try to create new user. Close modal if successful.
-      this.createUser().then(isUserPosted => {
-        if (isUserPosted) {
-          this.handleClose();
-        }
-      });
-    }
-  }
-
-  // Create a new user. Return true if successful and false otherwise.
-  createUser() {
-    const user = {
-      username: this.state.formUsername,
-      password: this.state.formPassword
-    };
-
-    const promise = fetch(`https://poketype-api.herokuapp.com/v1/users`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(user)
-    }).then(
-      res => {
-        if (res.status === 201) {
-          // User successfully created
-          return true;
-        } else {
-          return false;
-        }
-      },
-      err => console.error(err)
-    );
-
-    return promise;
+    this.setState({ showSignUp: false });
   }
 
   render() {
@@ -120,55 +63,10 @@ class Home extends Component {
             Challenge other trainers across the globe to be the best typist
             there ever was.
           </p>
-          <Modal
-            centered
+          <SignUpModal
             show={this.state.showSignUp}
-            onHide={this.handleClose}
-          >
-            <Modal.Header closeButton>
-              <Modal.Title>Create Your Account</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form
-                noValidate
-                validated={this.state.validated}
-                onSubmit={this.handleSubmit}
-              >
-                <Form.Group controlId="formUsername">
-                  <Form.Label>Username</Form.Label>
-                  <Form.Control
-                    required
-                    type="text"
-                    placeholder="Enter username"
-                    onChange={this.handleChange}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Please enter your username
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group controlId="formPassword">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    required
-                    type="password"
-                    placeholder="Enter password"
-                    onChange={this.handleChange}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Please enter your password
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <Button block type="submit" variant="primary">
-                  Create Account
-                </Button>
-              </Form>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="link" onClick={this.handleClose}>
-                Continue as guest
-              </Button>
-            </Modal.Footer>
-          </Modal>
+            handleClose={this.handleClose}
+          />
           <Button
             block
             variant="primary"
@@ -177,10 +75,8 @@ class Home extends Component {
           >
             Sign Up / Continue as Guest
           </Button>
-          <Link to="/categories">
-            <Button variant="link">
-              I already have an account (temporarily routes to categories)
-            </Button>
+          <Link to="/login">
+            <Button variant="link">I already have an account</Button>
           </Link>
         </Row>
       </Container>
