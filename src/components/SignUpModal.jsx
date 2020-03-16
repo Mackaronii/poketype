@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import Link from "react-router-dom/Link";
+import Spinner from "react-bootstrap/Spinner";
+const Link = require("react-router-dom").Link;
 
 class SignUpModal extends Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class SignUpModal extends Component {
         formConfirmPassword: false
       },
       isSubmitEnabled: false,
+      isSubmitLoading: false,
       isSignedUp: false
     };
 
@@ -52,33 +54,32 @@ class SignUpModal extends Component {
         err => console.error(err)
       )
       .then(json => {
-        this.setState({ isUsernameTaken: json !== null });
-      })
-      .then(() =>
-        // Next, determine which fields are valid
-        this.setState(
-          {
-            isValid: {
-              formUsername:
-                !this.state.isUsernameTaken &&
-                this.state.formUsername.length > 0,
-              formPassword: this.state.formPassword.length >= 6,
-              formConfirmPassword:
-                this.state.formConfirmPassword.length >= 6 &&
-                this.state.formPassword === this.state.formConfirmPassword
-            }
-          },
-          () =>
-            // Then enable the submit button is all fields are valid
-            this.setState({
-              isSubmitEnabled: Object.keys(this.state.isValid).every(
-                key => this.state.isValid[key]
-              )
-                ? true
-                : false
-            })
-        )
-      );
+        this.setState({ isUsernameTaken: json !== null }, () => {
+          // Next, determine which fields are valid
+          this.setState(
+            {
+              isValid: {
+                formUsername:
+                  !this.state.isUsernameTaken &&
+                  this.state.formUsername.length > 0,
+                formPassword: this.state.formPassword.length >= 6,
+                formConfirmPassword:
+                  this.state.formConfirmPassword.length >= 6 &&
+                  this.state.formPassword === this.state.formConfirmPassword
+              }
+            },
+            () =>
+              // Then enable the submit button is all fields are valid
+              this.setState({
+                isSubmitEnabled: Object.keys(this.state.isValid).every(
+                  key => this.state.isValid[key]
+                )
+                  ? true
+                  : false
+              })
+          );
+        });
+      });
   }
 
   handleSubmit(e) {
@@ -86,18 +87,17 @@ class SignUpModal extends Component {
 
     const { formUsername, formPassword } = this.state;
 
-    // Try to create new user. Close modal if successful.
-    this.createUser(formUsername, formPassword).then(isSuccess => {
-      if (isSuccess) {
-        this.setState({ isSignedUp: true });
-      } else {
-        this.setState({
-          showToast: true,
-          toastHeader: "Account Not Created",
-          toastBody:
-            "Either your username is already taken or there was a server error."
-        });
-      }
+    this.setState({ isSubmitLoading: true }, () => {
+      // Try to create new user
+      this.createUser(formUsername, formPassword).then(isSuccess => {
+        if (isSuccess) {
+          // Successfully created user, show log in button
+          this.setState({ isSignedUp: true, isSubmitLoading: false });
+        } else {
+          // Failed to create user, show error
+          this.setState({ isSubmitLoading: false });
+        }
+      });
     });
   }
 
@@ -105,6 +105,7 @@ class SignUpModal extends Component {
   handleExited() {
     this.setState({
       isSubmitEnabled: false,
+      isSubmitLoading: false,
       formUsername: "",
       formPassword: "",
       formConfirmPassword: "",
@@ -216,17 +217,31 @@ class SignUpModal extends Component {
                 block
                 type="submit"
                 variant="primary"
-                disabled={!this.state.isSubmitEnabled}
+                disabled={
+                  !this.state.isSubmitEnabled || this.state.isSubmitLoading
+                }
                 style={{ borderRadius: "20px" }}
               >
-                Create Account
+                <Spinner
+                  variant="light"
+                  as="span"
+                  animation="grow"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                  style={{
+                    marginRight: "10px",
+                    display: this.state.isSubmitLoading ? "default" : "none"
+                  }}
+                />
+                {this.state.isSubmitLoading ? "Creating..." : "Create Account"}
               </Button>
             </Form>
           )}
         </Modal.Body>
         {this.state.isSignedUp ? null : (
           <Modal.Footer>
-            <Button disabled="true" variant="link" onClick={this.handleClose}>
+            <Button disabled={true} variant="link" onClick={this.handleClose}>
               Continue as guest
             </Button>
           </Modal.Footer>

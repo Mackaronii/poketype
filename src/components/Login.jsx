@@ -1,7 +1,7 @@
 import React from "react";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
-import Link from "react-router-dom/Link";
+const Link = require("react-router-dom").Link;
 
 function LogIn(props) {
   return (

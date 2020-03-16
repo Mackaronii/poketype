@@ -1,7 +1,6 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./components/Home";
-import SignUp from "./components/SignUp";
 import LogIn from "./components/LogIn";
 import Categories from "./components/Categories";
 import Container from "react-bootstrap/Container";
@@ -12,20 +11,17 @@ class App extends React.Component {
   render() {
     return (
       <HashRouter basename="/">
-        <div>
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route path="/signup" component={SignUp} />
-            <Route path="/login" component={LogIn} />
-            <Route path="/categories" component={Categories} />
-            <Route path="/facts">
-              <Main category="fact" />
-            </Route>
-            <Route path="/behaviours">
-              <Main category="behaviour" />
-            </Route>
-          </Switch>
-        </div>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/login" component={LogIn} />
+          <Route path="/categories" component={Categories} />
+          <Route path="/facts">
+            <Main category="fact" />
+          </Route>
+          <Route path="/behaviours">
+            <Main category="behaviour" />
+          </Route>
+        </Switch>
       </HashRouter>
     );
   }
