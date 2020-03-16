@@ -28,10 +28,8 @@ class LogIn extends Component {
   handleSubmit(e) {
     e.preventDefault();
     const { formUsername, formPassword } = this.state;
-    this.logIn(formUsername, formPassword);
-    /*
-    this.logIn(formUsername, formPassword).then(isLoggedIn => {
-      if (isLoggedIn) {
+    this.logIn(formUsername, formPassword).then(result => {
+      if (result.success) {
         // Successfully logged in
         this.setState({ isLoggedIn: true });
       } else {
@@ -39,7 +37,6 @@ class LogIn extends Component {
         this.setState({ showError: true });
       }
     });
-    */
   }
 
   logIn(username, password) {
@@ -51,14 +48,14 @@ class LogIn extends Component {
     const promise = fetch(`https://poketype-api.herokuapp.com/v1/users/login`, {
       method: "POST",
       headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json; charset=utf-8",
-        Connection: "keep-alive"
+        "Content-Type": "application/json; charset=utf-8"
       },
       body: JSON.stringify(credentials)
     })
       .then(res => res.json())
-      .then(json => console.log(json));
+      .then(json => {
+        return json;
+      });
 
     return promise;
   }
