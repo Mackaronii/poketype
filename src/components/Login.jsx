@@ -28,15 +28,18 @@ class LogIn extends Component {
   handleSubmit(e) {
     e.preventDefault();
     const { formUsername, formPassword } = this.state;
+    this.logIn(formUsername, formPassword);
+    /*
     this.logIn(formUsername, formPassword).then(isLoggedIn => {
       if (isLoggedIn) {
+        // Successfully logged in
         this.setState({ isLoggedIn: true });
-        console.log("Logged in");
       } else {
+        // Failed to log in
         this.setState({ showError: true });
-        console.log("Either the user does not exist or invalid credentials.");
       }
     });
+    */
   }
 
   logIn(username, password) {
@@ -48,20 +51,14 @@ class LogIn extends Component {
     const promise = fetch(`https://poketype-api.herokuapp.com/v1/users/login`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json; charset=utf-8",
+        Connection: "keep-alive"
       },
       body: JSON.stringify(credentials)
-    }).then(
-      res => {
-        if (res.status === 200) {
-          // User successfully logged in
-          return true;
-        } else {
-          return false;
-        }
-      },
-      err => console.error(err)
-    );
+    })
+      .then(res => res.json())
+      .then(json => console.log(json));
 
     return promise;
   }
