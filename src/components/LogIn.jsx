@@ -45,7 +45,7 @@ class LogIn extends Component {
       password: password
     };
 
-    const promise = fetch(`https://poketype-api.herokuapp.com/v1/users/login`, {
+    return fetch(`https://poketype-api.herokuapp.com/v1/users/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json; charset=utf-8"
@@ -56,8 +56,6 @@ class LogIn extends Component {
       .then(json => {
         return json;
       });
-
-    return promise;
   }
 
   render() {

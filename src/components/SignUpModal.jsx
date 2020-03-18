@@ -54,7 +54,7 @@ class SignUpModal extends Component {
         err => console.error(err)
       )
       .then(json => {
-        this.setState({ isUsernameTaken: json !== null }, () => {
+        this.setState({ isUsernameTaken: json.success }, () => {
           // Next, determine which fields are valid
           this.setState(
             {
