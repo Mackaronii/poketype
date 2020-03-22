@@ -51,11 +51,7 @@ class LogIn extends Component {
         "Content-Type": "application/json; charset=utf-8"
       },
       body: JSON.stringify(credentials)
-    })
-      .then(res => res.json())
-      .then(json => {
-        return json;
-      });
+    }).then(res => res.json());
   }
 
   render() {

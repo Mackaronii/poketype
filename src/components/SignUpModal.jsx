@@ -14,6 +14,7 @@ class SignUpModal extends Component {
       formUsername: "",
       formPassword: "",
       formConfirmPassword: "",
+      isValidated: false,
       isUsernameTaken: false,
       isValid: {
         formUsername: false,
@@ -38,48 +39,36 @@ class SignUpModal extends Component {
 
   handleChange(e) {
     // Update field states and then validate form
-    this.setState({ [e.target.id]: e.target.value }, () => this.validateForm());
+    this.setState(
+      { [e.target.id]: e.target.value, isUsernameTaken: false },
+      () => this.validateForm()
+    );
   }
 
   validateForm() {
-    // Check if username is already taken
-    fetch(
-      `https://poketype-api.herokuapp.com/v1/users?username=${this.state.formUsername}`,
+    // Validate fields
+    this.setState(
       {
-        method: "GET"
-      }
-    )
-      .then(
-        res => res.json(),
-        err => console.error(err)
-      )
-      .then(json => {
-        this.setState({ isUsernameTaken: json.success }, () => {
-          // Next, determine which fields are valid
-          this.setState(
-            {
-              isValid: {
-                formUsername:
-                  !this.state.isUsernameTaken &&
-                  this.state.formUsername.length > 0,
-                formPassword: this.state.formPassword.length >= 6,
-                formConfirmPassword:
-                  this.state.formConfirmPassword.length >= 6 &&
-                  this.state.formPassword === this.state.formConfirmPassword
-              }
-            },
-            () =>
-              // Then enable the submit button is all fields are valid
-              this.setState({
-                isSubmitEnabled: Object.keys(this.state.isValid).every(
-                  key => this.state.isValid[key]
-                )
-                  ? true
-                  : false
-              })
-          );
-        });
-      });
+        isValid: {
+          formUsername: this.state.isValidated
+            ? !this.state.isUsernameTaken && this.state.formUsername.length > 0
+            : this.state.formUsername.length > 0,
+          formPassword: this.state.formPassword.length >= 6,
+          formConfirmPassword:
+            this.state.formConfirmPassword.length >= 6 &&
+            this.state.formPassword === this.state.formConfirmPassword
+        }
+      },
+      () =>
+        // Then enable the submit button is all fields are valid
+        this.setState({
+          isSubmitEnabled: Object.keys(this.state.isValid).every(
+            key => this.state.isValid[key]
+          )
+            ? true
+            : false
+        })
+    );
   }
 
   handleSubmit(e) {
@@ -87,21 +76,38 @@ class SignUpModal extends Component {
 
     const { formUsername, formPassword } = this.state;
 
+    // Disable submit button while fetches are executing
     this.setState({ isSubmitLoading: true }, () => {
-      // Try to create new user
-      this.createUser(formUsername, formPassword).then(isSuccess => {
-        if (isSuccess) {
-          // Successfully created user, show log in button
-          this.setState({ isSignedUp: true, isSubmitLoading: false });
+      // Check username availability
+      this.checkIfUsernameTaken(formUsername).then(isUsernameTaken => {
+        // Show error is username taken
+        if (isUsernameTaken) {
+          this.setState({
+            isSubmitLoading: false,
+            isValidated: true,
+            isUsernameTaken: true
+          });
         } else {
-          // Failed to create user, show error
-          this.setState({ isSubmitLoading: false });
+          // Create user
+          this.createUser(formUsername, formPassword).then(isSuccess => {
+            if (isSuccess) {
+              // Successfully created user, show log in button
+              this.setState({
+                isSignedUp: true,
+                isSubmitLoading: false,
+                isValidated: true
+              });
+            } else {
+              // Failed to create user, show error
+              this.setState({ isSubmitLoading: false, isValidated: true });
+            }
+          });
         }
       });
     });
   }
 
-  // Clean up state for when modal is re-opened
+  // Clean up state for when modal is exited
   handleExited() {
     this.setState({
       isSubmitEnabled: false,
@@ -118,6 +124,20 @@ class SignUpModal extends Component {
     });
   }
 
+  checkIfUsernameTaken(username) {
+    return fetch(
+      `https://poketype-api.herokuapp.com/v1/users?username=${username}`,
+      {
+        method: "GET"
+      }
+    )
+      .then(
+        res => res.json(),
+        err => console.error(err)
+      )
+      .then(json => json.success);
+  }
+
   // Create a new user. Return true if successful and false otherwise.
   createUser(username, password) {
     const user = {
@@ -125,25 +145,18 @@ class SignUpModal extends Component {
       password: password
     };
 
-    const promise = fetch(`https://poketype-api.herokuapp.com/v1/users`, {
+    return fetch(`https://poketype-api.herokuapp.com/v1/users`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json; charset=utf-8"
       },
       body: JSON.stringify(user)
-    }).then(
-      res => {
-        if (res.status === 201) {
-          // User successfully created
-          return true;
-        } else {
-          return false;
-        }
-      },
-      err => console.error(err)
-    );
-
-    return promise;
+    })
+      .then(
+        res => res.json(),
+        err => console.error(err)
+      )
+      .then(json => json.success);
   }
 
   render() {
@@ -225,13 +238,15 @@ class SignUpModal extends Component {
                 <Spinner
                   variant="light"
                   as="span"
-                  animation="grow"
+                  animation="border"
                   size="sm"
                   role="status"
                   aria-hidden="true"
                   style={{
                     marginRight: "10px",
-                    display: this.state.isSubmitLoading ? "default" : "none"
+                    visibility: this.state.isSubmitLoading
+                      ? "visible"
+                      : "hidden"
                   }}
                 />
                 {this.state.isSubmitLoading ? "Creating..." : "Create Account"}
